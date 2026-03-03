@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixy — Your AI Handyman | Diagnose &amp; Fix Home Repairs</title>
+  <meta name="description" content="Fixy is the AI-powered handyman app that helps you diagnose home repair issues instantly. Describe your problem, get an AI diagnosis, and fix it yourself or find a pro.">
+  <meta name="keywords" content="AI home repair, AI handyman, home repair app, DIY repair, home maintenance, fix it yourself, AI diagnosis">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://fixyai.app/">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Fixy — Your AI Handyman">
+  <meta property="og:description" content="Diagnose home repair issues instantly with AI. Fix it yourself or find a pro.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fixyai.app/">
+  <meta property="og:image" content="https://fixyai.app/og-image.png">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fixy — Your AI Handyman">
+  <meta name="twitter:description" content="Diagnose home repair issues instantly with AI.">
+  <!-- Favicon placeholder -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue: #2563EB;
+      --blue-dark: #1D4ED8;
+      --blue-light: #EFF6FF;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-500: #6B7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #FFFFFF;
+      --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--gray-900); line-height: 1.6; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    a { color: var(--blue); text-decoration: none; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid var(--gray-100); }
+    nav .container { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-size: 1.5rem; font-weight: 800; color: var(--blue); }
+    .logo span { color: var(--gray-900); }
+    .nav-cta { background: var(--blue); color: var(--white); padding: 8px 20px; border-radius: 8px; font-weight: 600; font-size: .9rem; transition: background .2s; }
+    .nav-cta:hover { background: var(--blue-dark); color: var(--white); }
+
+    /* HERO */
+    .hero { padding: 120px 0 80px; background: linear-gradient(180deg, var(--blue-light) 0%, var(--white) 100%); text-align: center; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .hero h1 span { color: var(--blue); }
+    .hero p { font-size: 1.2rem; color: var(--gray-500); max-width: 520px; margin: 0 auto 32px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; margin-bottom: 48px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 1rem; transition: all .2s; border: none; cursor: pointer; }
+    .btn-primary { background: var(--blue); color: var(--white); }
+    .btn-primary:hover { background: var(--blue-dark); color: var(--white); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.3); }
+    .btn-outline { background: var(--white); color: var(--gray-900); border: 2px solid var(--gray-100); }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .phone-mock { max-width: 280px; margin: 0 auto; background: var(--gray-900); border-radius: 32px; padding: 12px; box-shadow: 0 24px 48px rgba(0,0,0,.12); }
+    .phone-screen { background: linear-gradient(135deg, var(--blue) 0%, #60A5FA 100%); border-radius: 22px; aspect-ratio: 9/19; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--white); padding: 24px; }
+    .phone-screen .icon { font-size: 3rem; margin-bottom: 12px; }
+    .phone-screen p { font-size: .9rem; opacity: .9; }
+
+    /* SECTIONS */
+    section { padding: 80px 0; }
+    .section-title { text-align: center; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 12px; }
+    .section-sub { text-align: center; color: var(--gray-500); max-width: 500px; margin: 0 auto 48px; font-size: 1.05rem; }
+
+    /* HOW IT WORKS */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+    .step { text-align: center; padding: 32px 24px; border-radius: var(--radius); background: var(--white); border: 1px solid var(--gray-100); }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--blue); color: var(--white); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; margin-bottom: 16px; }
+    .step h3 { margin-bottom: 8px; font-size: 1.1rem; }
+    .step p { color: var(--gray-500); font-size: .95rem; }
+
+    /* FEATURES */
+    .features-bg { background: var(--gray-50); }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .feature { padding: 32px; border-radius: var(--radius); background: var(--white); border: 1px solid var(--gray-100); }
+    .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+    .feature h3 { margin-bottom: 8px; }
+    .feature p { color: var(--gray-500); font-size: .95rem; }
+    .badge { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+
+    /* SOCIAL PROOF */
+    .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .testimonial { padding: 28px; border-radius: var(--radius); background: var(--white); border: 1px solid var(--gray-100); }
+    .testimonial p { font-style: italic; color: var(--gray-700); margin-bottom: 16px; }
+    .testimonial .author { font-weight: 600; font-size: .9rem; }
+    .testimonial .role { color: var(--gray-500); font-size: .85rem; }
+    .stars { color: #F59E0B; margin-bottom: 8px; }
+
+    /* WAITLIST */
+    .waitlist { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); color: var(--white); text-align: center; }
+    .waitlist .section-title { color: var(--white); }
+    .waitlist .section-sub { color: rgba(255,255,255,.8); }
+    .waitlist-form { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; }
+    .waitlist-form input { flex: 1; padding: 14px 18px; border-radius: 10px; border: none; font-size: 1rem; outline: none; }
+    .waitlist-form button { padding: 14px 28px; border-radius: 10px; border: none; background: var(--white); color: var(--blue); font-weight: 700; font-size: 1rem; cursor: pointer; white-space: nowrap; transition: transform .2s; }
+    .waitlist-form button:hover { transform: translateY(-1px); }
+    .waitlist-note { margin-top: 12px; font-size: .85rem; opacity: .7; }
+    @media (max-width: 500px) { .waitlist-form { flex-direction: column; } }
+
+    /* FOOTER */
+    footer { padding: 48px 0 32px; background: var(--gray-900); color: var(--gray-500); font-size: .9rem; }
+    .footer-grid { display: flex; flex-wrap: wrap; gap: 48px; margin-bottom: 32px; }
+    .footer-col h4 { color: var(--white); margin-bottom: 12px; font-size: .95rem; }
+    .footer-col a { display: block; color: var(--gray-500); margin-bottom: 8px; transition: color .2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 24px; text-align: center; }
+
+    /* SUCCESS STATE */
+    .form-success { display: none; font-size: 1.1rem; }
+    .form-success.show { display: block; }
+    .waitlist-form.hidden { display: none; }
+  </style>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "Fixy",
+    "operatingSystem": "iOS",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "AI-powered handyman app that helps diagnose and fix home repair issues.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="logo">🔧 <span>Fixy</span></div>
+    <a href="https://apps.apple.com/app/fixy-ai-handyman/id6747599349" class="nav-cta">Download Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>Your <span>AI Handyman</span></h1>
+    <p>Describe any home repair issue and get an instant AI diagnosis. Fix it yourself with step-by-step guidance — or find a pro.</p>
+    <div class="hero-actions">
+      <a href="https://apps.apple.com/app/fixy-ai-handyman/id6747599349" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 21.99 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 21.99C7.79 22.03 6.8 20.68 5.96 19.47C4.25 16.99 2.97 12.5 4.7 9.56C5.55 8.1 7.13 7.17 8.82 7.15C10.1 7.13 11.32 8.02 12.11 8.02C12.89 8.02 14.37 6.94 15.92 7.11C16.57 7.14 18.37 7.38 19.49 9.08C19.39 9.14 17.2 10.42 17.22 13.04C17.25 16.14 19.95 17.18 20 17.19C19.97 17.27 19.56 18.67 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.09 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+        Download for iOS
+      </a>
+      <a href="#waitlist" class="btn btn-outline">Join Waitlist</a>
+    </div>
+    <div class="phone-mock">
+      <div class="phone-screen">
+        <div class="icon">🔧</div>
+        <strong style="font-size:1.2rem;margin-bottom:8px">Fixy</strong>
+        <p>Describe your problem…<br>"My kitchen faucet is leaking"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Three simple steps to solve any home repair issue</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Describe the Problem</h3>
+        <p>Tell Fixy what's going on — a leaky pipe, broken outlet, squeaky door. Just type or talk.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Get AI Diagnosis</h3>
+        <p>Fixy analyzes your issue instantly and tells you what's likely wrong and what parts you need.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Fix It or Find a Pro</h3>
+        <p>Follow step-by-step repair instructions, or connect with a local professional if you need help.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-bg">
+  <div class="container">
+    <h2 class="section-title">Features</h2>
+    <p class="section-sub">Everything you need to tackle home repairs with confidence</p>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Diagnosis</h3>
+        <p>Chat with our AI to identify problems, get repair estimates, and understand what's happening in your home.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📸</div>
+        <h3>Photo Upload <span class="badge">Coming Soon</span></h3>
+        <p>Snap a photo of the issue and let our AI visually diagnose the problem for even more accurate results.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏪</div>
+        <h3>Service Marketplace <span class="badge">Coming Soon</span></h3>
+        <p>Can't DIY? Browse vetted local pros, compare quotes, and book repairs — all inside the app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section>
+  <div class="container">
+    <h2 class="section-title">What People Are Saying</h2>
+    <p class="section-sub">Join thousands of homeowners who trust Fixy</p>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"Fixy diagnosed my dishwasher issue in seconds. Saved me a $200 service call — I fixed it myself with a $15 part!"</p>
+        <div class="author">Sarah M.</div>
+        <div class="role">Homeowner</div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"Finally an app that actually helps with home repairs instead of just showing me YouTube videos. The AI is shockingly good."</p>
+        <div class="author">James K.</div>
+        <div class="role">First-time Homeowner</div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p>"I use this every time something breaks. It's like having a knowledgeable friend who knows how to fix everything."</p>
+        <div class="author">Maria L.</div>
+        <div class="role">Apartment Renter</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <h2 class="section-title">Get Early Access to New Features</h2>
+    <p class="section-sub">Join the waitlist for photo diagnosis, the service marketplace, and more. Be the first to know.</p>
+    <form class="waitlist-form" id="waitlistForm" action="https://formspree.io/f/xyzgolda" method="POST">
+      <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit">Join Waitlist</button>
+    </form>
+    <div class="form-success" id="formSuccess">🎉 You're on the list! We'll be in touch.</div>
+    <p class="waitlist-note">No spam, ever. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>🔧 Fixy</h4>
+        <p>AI-powered home repair<br>diagnosis at your fingertips.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="https://apps.apple.com/app/fixy-ai-handyman/id6747599349">Download iOS App</a>
+        <a href="#waitlist">Join Waitlist</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="mailto:hello@fixy.app">Contact Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Fixy. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Handle form submission with fallback
+  const form = document.getElementById('waitlistForm');
+  const success = document.getElementById('formSuccess');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        form.classList.add('hidden');
+        success.classList.add('show');
+      } else { form.submit(); }
+    } catch { form.submit(); }
+  });
+</script>
+
+</body>
+</html>
