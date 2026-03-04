@@ -36,22 +36,26 @@
     }
 
     .logo-wrap {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #3B82F6 0%, #1D4ED8 40%, #1e3a8a 65%, #0f1a3d 85%, #0a0a0a 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative;
       margin-bottom: 36px;
-      box-shadow: 0 0 80px rgba(59, 130, 246, 0.3), 0 0 160px rgba(59, 130, 246, 0.1);
-      overflow: hidden;
+    }
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(29, 78, 216, 0.2) 30%, rgba(30, 58, 138, 0.08) 55%, transparent 75%);
+      border-radius: 50%;
+      pointer-events: none;
     }
     .logo-wrap img {
-      width: 170px;
-      height: 170px;
+      position: relative;
+      width: 180px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 24px;
+      border-radius: 28px;
     }
 
     h1 {
@@ -131,8 +135,8 @@
     }
 
     @media (max-width: 480px) {
-      .logo-wrap { width: 160px; height: 160px; }
-      .logo-wrap img { width: 136px; height: 136px; }
+      .logo-wrap img { width: 140px; height: 140px; }
+      .logo-glow { width: 280px; height: 280px; }
     }
   </style>
 </head>
@@ -140,6 +144,7 @@
 
   <div class="hero">
     <div class="logo-wrap">
+      <div class="logo-glow"></div>
       <img src="fixy-logo.png" alt="Fixy">
     </div>
 
