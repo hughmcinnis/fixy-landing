@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Fixy Pro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; min-height: 100vh; }
+    .container { max-width: 440px; margin: 0 auto; padding: 40px 20px; }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo a { color: #f0f0f0; text-decoration: none; font-size: 28px; font-weight: 700; }
+    .logo span { color: #3b82f6; }
+    .card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 32px; }
+    h2 { font-size: 22px; margin-bottom: 8px; text-align: center; }
+    .subtitle { color: #888; text-align: center; margin-bottom: 24px; font-size: 14px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 14px; color: #888; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #f0f0f0; font-size: 16px; outline: none; transition: border-color 0.2s; }
+    .field input:focus { border-color: #3b82f6; }
+    .btn { display: block; width: 100%; background: #3b82f6; color: #fff; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 16px; border: none; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
+    .btn:hover { background: #2563eb; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-msg { color: #ef4444; font-size: 14px; text-align: center; margin-top: 12px; display: none; }
+    .links { text-align: center; margin-top: 20px; }
+    .links a { color: #3b82f6; text-decoration: none; font-size: 14px; }
+    .benefits { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .benefit { flex: 1; min-width: 120px; text-align: center; padding: 12px; background: #1a1a1a; border-radius: 8px; }
+    .benefit .icon { font-size: 24px; margin-bottom: 4px; }
+    .benefit .text { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><a href="/">Fixy<span>Pro</span></a></div>
+    <div class="card">
+      <h2>Create Your Pro Account</h2>
+      <p class="subtitle">Free forever. Get connected with homeowners who need your services.</p>
+      <div class="benefits">
+        <div class="benefit"><div class="icon">📋</div><div class="text">Get qualified leads</div></div>
+        <div class="benefit"><div class="icon">💰</div><div class="text">No fees or commissions</div></div>
+        <div class="benefit"><div class="icon">⚡</div><div class="text">Direct contact info</div></div>
+      </div>
+      <form id="registerForm">
+        <div class="field"><label>Company Name</label><input type="text" id="companyName" required></div>
+        <div class="field"><label>Email</label><input type="email" id="email" required></div>
+        <div class="field"><label>Phone</label><input type="tel" id="phone"></div>
+        <div class="field"><label>Password</label><input type="password" id="password" required minlength="8"></div>
+        <button type="submit" class="btn" id="submitBtn">Create Account</button>
+        <div class="error-msg" id="error"></div>
+      </form>
+      <div class="links">
+        <a href="/pro/login">Already have an account? Log in</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    if (localStorage.getItem('fixy_pro_token')) {
+      const leadId = new URLSearchParams(window.location.search).get('leadId');
+      window.location.href = leadId ? `/pro/claim?leadId=${leadId}` : '/pro/dashboard';
+    }
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const errorEl = document.getElementById('error');
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      try {
+        const res = await fetch('/api/pro/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            companyName: document.getElementById('companyName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value || undefined,
+            password: document.getElementById('password').value
+          })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorEl.textContent = data.error || 'Registration failed';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        localStorage.setItem('fixy_pro_token', data.token);
+        const leadId = new URLSearchParams(window.location.search).get('leadId');
+        window.location.href = leadId ? `/pro/claim?leadId=${leadId}` : '/pro/dashboard';
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

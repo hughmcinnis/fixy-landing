@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claim Lead — Fixy Pro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; min-height: 100vh; }
+    .container { max-width: 560px; margin: 0 auto; padding: 40px 20px; }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo a { color: #f0f0f0; text-decoration: none; font-size: 28px; font-weight: 700; }
+    .logo span { color: #3b82f6; }
+    .card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    .card h2 { font-size: 22px; margin-bottom: 8px; }
+    .card .meta { color: #888; font-size: 14px; margin-bottom: 16px; }
+    .diagnosis-box { background: #1a1a1a; border-left: 3px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0; color: #ccc; line-height: 1.6; }
+    .cta { text-align: center; margin-top: 24px; }
+    .btn { display: inline-block; background: #3b82f6; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: #2563eb; }
+    .btn-outline { background: transparent; border: 1px solid #3b82f6; color: #3b82f6; }
+    .btn-outline:hover { background: #3b82f6; color: #fff; }
+    .contact-info { margin-top: 20px; }
+    .contact-info p { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
+    .contact-info strong { color: #f0f0f0; }
+    .loading { text-align: center; padding: 60px; color: #888; }
+    .error { color: #ef4444; text-align: center; padding: 40px; }
+    .links { text-align: center; margin-top: 16px; }
+    .links a { color: #3b82f6; text-decoration: none; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><a href="/">Fixy<span>Pro</span></a></div>
+    <div id="content"><div class="loading">Loading lead details...</div></div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const leadId = params.get('leadId');
+    const token = localStorage.getItem('fixy_pro_token');
+
+    async function loadLead() {
+      if (!leadId) {
+        document.getElementById('content').innerHTML = '<div class="error">No lead ID provided.</div>';
+        return;
+      }
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch(`/api/leads/${leadId}`, { headers });
+        const data = await res.json();
+
+        if (!res.ok) {
+          document.getElementById('content').innerHTML = `<div class="error">${data.error || 'Lead not found'}</div>`;
+          return;
+        }
+
+        if (data.authenticated === false) {
+          // Teaser view
+          document.getElementById('content').innerHTML = `
+            <div class="card">
+              <h2>New ${data.serviceType} Lead</h2>
+              <div class="meta">${data.generalArea || 'Unknown area'} · ${new Date(data.createdAt).toLocaleDateString()}</div>
+              <div class="diagnosis-box">${data.diagnosis}</div>
+              <div class="cta">
+                <p style="color:#888;margin-bottom:16px;">Sign up for a free Fixy Pro account to see the homeowner's full contact details.</p>
+                <a href="/pro/register?leadId=${leadId}" class="btn">Sign Up to View Details</a>
+              </div>
+              <div class="links">
+                <a href="/pro/login?leadId=${leadId}">Already have an account? Log in</a>
+              </div>
+            </div>`;
+        } else {
+          // Full view
+          const c = data.userContact || {};
+          const loc = data.userLocation || {};
+          document.getElementById('content').innerHTML = `
+            <div class="card">
+              <h2>${data.serviceType} Lead</h2>
+              <div class="meta">${loc.city ? loc.city + ', ' + loc.state : ''} · ${new Date(data.createdAt).toLocaleDateString()} · ${data.status}</div>
+              <div class="diagnosis-box">${data.diagnosis}</div>
+              <div class="contact-info">
+                <h3 style="margin-bottom:12px;font-size:16px;">Homeowner Contact</h3>
+                ${c.name ? `<p><strong>Name:</strong> ${c.name}</p>` : ''}
+                ${c.email ? `<p><strong>Email:</strong> <a href="mailto:${c.email}" style="color:#3b82f6">${c.email}</a></p>` : ''}
+                ${c.phone ? `<p><strong>Phone:</strong> <a href="tel:${c.phone}" style="color:#3b82f6">${c.phone}</a></p>` : ''}
+                ${c.zipCode ? `<p><strong>Zip Code:</strong> ${c.zipCode}</p>` : ''}
+              </div>
+              <div class="cta">
+                <a href="/pro/dashboard" class="btn">Go to Dashboard</a>
+              </div>
+            </div>`;
+        }
+      } catch (err) {
+        document.getElementById('content').innerHTML = '<div class="error">Failed to load lead. Please try again.</div>';
+      }
+    }
+
+    loadLead();
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Fixy Pro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; min-height: 100vh; }
+    .header { background: #141414; border-bottom: 1px solid #222; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .header .logo a { color: #f0f0f0; text-decoration: none; font-size: 22px; font-weight: 700; }
+    .header .logo span { color: #3b82f6; }
+    .header .logout { color: #888; background: none; border: 1px solid #333; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    .header .logout:hover { color: #f0f0f0; border-color: #555; }
+    .container { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    .subtitle { color: #888; margin-bottom: 32px; }
+    .empty { text-align: center; padding: 60px 20px; color: #666; }
+    .empty p { margin-bottom: 8px; }
+    .lead-card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; }
+    .lead-card:hover { border-color: #3b82f6; }
+    .lead-card.expanded { border-color: #3b82f6; }
+    .lead-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .lead-type { font-size: 18px; font-weight: 600; }
+    .lead-status { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+    .status-pending { background: #422006; color: #f59e0b; }
+    .status-sent { background: #0c2d48; color: #3b82f6; }
+    .status-claimed { background: #052e16; color: #22c55e; }
+    .status-expired { background: #1c1917; color: #888; }
+    .lead-meta { color: #888; font-size: 14px; margin-top: 6px; }
+    .lead-preview { color: #aaa; font-size: 14px; margin-top: 10px; line-height: 1.5; }
+    .lead-details { margin-top: 16px; padding-top: 16px; border-top: 1px solid #222; display: none; }
+    .lead-details.show { display: block; }
+    .contact-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a1a1a; }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-label { color: #888; font-size: 14px; }
+    .contact-value { color: #f0f0f0; font-size: 14px; }
+    .contact-value a { color: #3b82f6; text-decoration: none; }
+    .diagnosis-full { background: #1a1a1a; border-left: 3px solid #3b82f6; padding: 16px; border-radius: 4px; margin-top: 12px; color: #ccc; line-height: 1.6; font-size: 14px; }
+    .loading { text-align: center; padding: 60px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo"><a href="/">Fixy<span>Pro</span></a></div>
+    <button class="logout" onclick="logout()">Log Out</button>
+  </div>
+  <div class="container">
+    <h1>Your Leads</h1>
+    <p class="subtitle">Homeowners who need your services</p>
+    <div id="leads"><div class="loading">Loading leads...</div></div>
+  </div>
+  <script>
+    const token = localStorage.getItem('fixy_pro_token');
+    if (!token) window.location.href = '/pro/login';
+
+    function logout() {
+      localStorage.removeItem('fixy_pro_token');
+      window.location.href = '/pro/login';
+    }
+
+    function statusClass(s) { return `status-${s || 'pending'}`; }
+
+    function toggleLead(id) {
+      const el = document.getElementById(`details-${id}`);
+      el.classList.toggle('show');
+      el.closest('.lead-card').classList.toggle('expanded');
+    }
+
+    async function loadLeads() {
+      try {
+        const res = await fetch('/api/pro/leads', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 401) {
+          localStorage.removeItem('fixy_pro_token');
+          window.location.href = '/pro/login';
+          return;
+        }
+
+        const data = await res.json();
+        const leads = data.leads || [];
+
+        if (!leads.length) {
+          document.getElementById('leads').innerHTML = `
+            <div class="empty">
+              <p style="font-size:48px;margin-bottom:16px;">📋</p>
+              <p style="font-size:18px;color:#aaa;">No leads yet</p>
+              <p>When homeowners in your area need your services, their leads will appear here.</p>
+            </div>`;
+          return;
+        }
+
+        document.getElementById('leads').innerHTML = leads.map(l => {
+          const c = l.user_contact || {};
+          const loc = l.user_location || {};
+          const area = loc.city ? `${loc.city}, ${loc.state}` : '';
+          const date = new Date(l.created_at).toLocaleDateString();
+          return `
+            <div class="lead-card" onclick="toggleLead('${l.id}')">
+              <div class="lead-header">
+                <div>
+                  <div class="lead-type">${l.service_type}</div>
+                  <div class="lead-meta">${area}${area && date ? ' · ' : ''}${date}</div>
+                </div>
+                <span class="lead-status ${statusClass(l.status)}">${l.status}</span>
+              </div>
+              <div class="lead-preview">${(l.diagnosis || '').slice(0, 120)}${l.diagnosis?.length > 120 ? '...' : ''}</div>
+              <div class="lead-details" id="details-${l.id}">
+                <div class="diagnosis-full">${l.diagnosis}</div>
+                <div style="margin-top:16px;">
+                  <h4 style="margin-bottom:8px;font-size:14px;color:#888;">Homeowner Contact</h4>
+                  ${c.name ? `<div class="contact-row"><span class="contact-label">Name</span><span class="contact-value">${c.name}</span></div>` : ''}
+                  ${c.email ? `<div class="contact-row"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:${c.email}">${c.email}</a></span></div>` : ''}
+                  ${c.phone ? `<div class="contact-row"><span class="contact-label">Phone</span><span class="contact-value"><a href="tel:${c.phone}">${c.phone}</a></span></div>` : ''}
+                  ${c.zipCode ? `<div class="contact-row"><span class="contact-label">Zip Code</span><span class="contact-value">${c.zipCode}</span></div>` : ''}
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+      } catch {
+        document.getElementById('leads').innerHTML = '<div class="loading" style="color:#ef4444;">Failed to load leads. Please refresh.</div>';
+      }
+    }
+
+    loadLeads();
+  </script>
+</body>
+</html>
