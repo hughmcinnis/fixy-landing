@@ -8,8 +8,14 @@
     }
   },
   "rewrites": [
+    { "source": "/api/find-pros", "destination": "/api/find-pros.js" },
+    { "source": "/api/request-quotes", "destination": "/api/request-quotes.js" },
+    { "source": "/api/leads/:id", "destination": "/api/leads/[id].js" },
+    { "source": "/api/pro/register", "destination": "/api/pro/register.js" },
+    { "source": "/api/pro/login", "destination": "/api/pro/login.js" },
+    { "source": "/api/pro/leads", "destination": "/api/pro/leads.js" },
     { "source": "/pro/:path*", "destination": "/pro/:path*.html" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/((?!api|pro).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -18,12 +24,6 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
   ]
