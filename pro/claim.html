@@ -51,6 +51,17 @@
     <div id="content"><div class="loading">Loading lead details...</div></div>
   </div>
   <script>
+    function formatServiceType(type) {
+      const labels = {
+        plumber: 'Plumbing', electrician: 'Electrical', hvac: 'HVAC',
+        handyman: 'Handyman', roofer: 'Roofing', painter: 'Painting',
+        appliance_repair: 'Appliance Repair', pest_control: 'Pest Control',
+        garage_door: 'Garage Door', landscaper: 'Landscaping',
+        general_contractor: 'General Contractor', locksmith: 'Locksmith',
+        flooring: 'Flooring', window: 'Window'
+      };
+      return labels[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
     const params = new URLSearchParams(window.location.search);
     const leadId = params.get('leadId');
     const token = localStorage.getItem('fixy_pro_token');
@@ -76,7 +87,7 @@
         if (data.authenticated === false) {
           document.getElementById('content').innerHTML = `
             <div class="card">
-              <h2>New ${data.serviceType} Lead</h2>
+              <h2>New ${formatServiceType(data.serviceType)} Lead</h2>
               <div class="meta">${data.generalArea || 'Unknown area'} · ${new Date(data.createdAt).toLocaleDateString()}</div>
               <div class="diagnosis-box">${data.diagnosis}</div>
               <div class="cta">
@@ -92,7 +103,7 @@
           const loc = data.userLocation || {};
           document.getElementById('content').innerHTML = `
             <div class="card">
-              <h2>${data.serviceType} Lead</h2>
+              <h2>${formatServiceType(data.serviceType)} Lead</h2>
               <div class="meta">${loc.city ? loc.city + ', ' + loc.state : ''} · ${new Date(data.createdAt).toLocaleDateString()} · ${data.status}</div>
               <div class="diagnosis-box">${data.diagnosis}</div>
               <div class="contact-info">

@@ -67,6 +67,17 @@
     <div id="leads"><div class="loading">Loading leads...</div></div>
   </div>
   <script>
+    function formatServiceType(type) {
+      const labels = {
+        plumber: 'Plumbing', electrician: 'Electrical', hvac: 'HVAC',
+        handyman: 'Handyman', roofer: 'Roofing', painter: 'Painting',
+        appliance_repair: 'Appliance Repair', pest_control: 'Pest Control',
+        garage_door: 'Garage Door', landscaper: 'Landscaping',
+        general_contractor: 'General Contractor', locksmith: 'Locksmith',
+        flooring: 'Flooring', window: 'Window'
+      };
+      return labels[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
     const token = localStorage.getItem('fixy_pro_token');
     if (!token) window.location.href = '/pro/login';
 
@@ -94,7 +105,7 @@
         <div class="lead-card${isClaimed ? ' claimed-highlight' : ''}" onclick="toggleLead('${id}')">
           <div class="lead-header">
             <div>
-              <div class="lead-type">${l.service_type || l.serviceType}${isClaimed ? ' <span style="font-size:12px;color:#3B82F6;">(from claim link)</span>' : ''}</div>
+              <div class="lead-type">${formatServiceType(l.service_type || l.serviceType)}${isClaimed ? ' <span style="font-size:12px;color:#3B82F6;">(from claim link)</span>' : ''}</div>
               <div class="lead-meta">${area}${area && date ? ' · ' : ''}${date}</div>
             </div>
             <span class="lead-status ${statusClass(l.status)}">${l.status}</span>
