@@ -59,11 +59,12 @@ module.exports = async function handler(req, res) {
     // Search Google Places
     const places = await searchNearbyPros(geo.lat, geo.lng, mapped.googlePlacesType, radius || 40000);
 
-    // Sort places by weighted score (rating * log(reviewCount+1)) before scraping
-    // This ensures we scrape the best candidates first
+    // Sort places by weighted score before scraping
+    // Formula: rating * sqrt(reviewCount) — heavily favors high review counts
+    // Example: 4.9★ × √6430 = 393 vs 4.8★ × √753 = 132
     const sorted = [...places].sort((a, b) => {
-      const scoreA = a.rating * Math.log2((a.reviewCount || 0) + 1);
-      const scoreB = b.rating * Math.log2((b.reviewCount || 0) + 1);
+      const scoreA = (a.rating || 0) * Math.sqrt((a.reviewCount || 0) + 1);
+      const scoreB = (b.rating || 0) * Math.sqrt((b.reviewCount || 0) + 1);
       return scoreB - scoreA;
     });
 
