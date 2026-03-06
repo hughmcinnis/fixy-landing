@@ -93,7 +93,8 @@
             companyName: document.getElementById('companyName').value,
             email: document.getElementById('email').value,
             phone: document.getElementById('phone').value || undefined,
-            password: document.getElementById('password').value
+            password: document.getElementById('password').value,
+            leadId: new URLSearchParams(window.location.search).get('leadId') || undefined
           })
         });
         const data = await res.json();
@@ -106,13 +107,8 @@
 
         localStorage.setItem('fixy_pro_token', data.token);
 
-        // Store claimed lead ID if registering from a claim link
-        const leadId = new URLSearchParams(window.location.search).get('leadId');
-        if (leadId) {
-          localStorage.setItem('claimedLeadId', leadId);
-        }
-
-        window.location.href = leadId ? `/pro/claim?leadId=${leadId}` : '/pro/dashboard';
+        // Lead claim is handled server-side now (saved in lead_claims table)
+        window.location.href = '/pro/dashboard';
       } catch {
         errorEl.textContent = 'Network error. Please try again.';
         errorEl.style.display = 'block';

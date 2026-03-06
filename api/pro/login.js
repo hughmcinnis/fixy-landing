@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { getProByEmail } = require('../../lib/db');
+const { getProByEmail, claimLead } = require('../../lib/db');
 const { signToken } = require('../../lib/auth');
 
 function cors(res) {
@@ -14,7 +14,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { email, password } = req.body || {};
+    const { email, password, leadId } = req.body || {};
     if (!email || !password) {
       return res.status(400).json({ error: 'email and password are required' });
     }
@@ -27,6 +27,11 @@ module.exports = async function handler(req, res) {
     const valid = await bcrypt.compare(password, account.password_hash);
     if (!valid) {
       return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Claim lead from claim link if provided
+    if (leadId) {
+      try { await claimLead(leadId, account.id); } catch {}
     }
 
     const token = signToken(account.id);

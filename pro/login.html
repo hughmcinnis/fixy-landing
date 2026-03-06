@@ -77,7 +77,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: document.getElementById('email').value,
-            password: document.getElementById('password').value
+            password: document.getElementById('password').value,
+            leadId: new URLSearchParams(window.location.search).get('leadId') || undefined
           })
         });
         const data = await res.json();
@@ -89,11 +90,8 @@
         }
 
         localStorage.setItem('fixy_pro_token', data.token);
-        const leadId = new URLSearchParams(window.location.search).get('leadId');
-        if (leadId) {
-          localStorage.setItem('claimedLeadId', leadId);
-        }
-        window.location.href = leadId ? `/pro/claim?leadId=${leadId}` : '/pro/dashboard';
+        // Lead claim handled server-side now
+        window.location.href = '/pro/dashboard';
       } catch {
         errorEl.textContent = 'Network error. Please try again.';
         errorEl.style.display = 'block';

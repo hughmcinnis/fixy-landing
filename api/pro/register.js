@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { companyName, email, phone, password } = req.body || {};
+    const { companyName, email, phone, password, leadId } = req.body || {};
 
     if (!companyName || !email || !password) {
       return res.status(400).json({ error: 'companyName, email, and password are required' });
@@ -49,6 +49,11 @@ module.exports = async function handler(req, res) {
       for (const lead of pendingLeads) {
         try { await claimLead(lead.id, account.id); } catch {}
       }
+    }
+
+    // Also claim the specific lead from the claim link (even if different email)
+    if (leadId) {
+      try { await claimLead(leadId, account.id); } catch {}
     }
 
     const token = signToken(account.id);
