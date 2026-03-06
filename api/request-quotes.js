@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { userId, professionals, diagnosis, serviceType, userContact, photos } = req.body || {};
+    const { userId, professionals, diagnosis, serviceType, urgency, userAttempts, additionalContext, userContact, photos } = req.body || {};
 
     if (!professionals?.length || !diagnosis || !serviceType || !userContact) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -47,6 +47,9 @@ module.exports = async function handler(req, res) {
           professional_phone: pro.phone || null,
           diagnosis,
           service_type: serviceType,
+          urgency: urgency || 'medium',
+          user_attempts: userAttempts || null,
+          additional_context: additionalContext || null,
           photos: photos || [],
           user_location: userLocation,
           user_contact: userContact,
