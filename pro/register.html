@@ -5,34 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up — Fixy Pro</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; min-height: 100vh; }
-    .container { max-width: 440px; margin: 0 auto; padding: 40px 20px; }
-    .logo { text-align: center; margin-bottom: 32px; }
-    .logo a { color: #f0f0f0; text-decoration: none; font-size: 28px; font-weight: 700; }
-    .logo span { color: #3b82f6; }
-    .card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 32px; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 480px; margin: 0 auto; padding: 48px 20px; }
+
+    .logo-wrap { text-align: center; margin-bottom: 40px; position: relative; display: flex; flex-direction: column; align-items: center; }
+    .logo-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, rgba(29,78,216,0.3) 25%, rgba(30,58,138,0.15) 45%, rgba(30,58,138,0.04) 65%, transparent 80%); border-radius: 50%; pointer-events: none; z-index: 0; }
+    .logo-wrap a { position: relative; z-index: 1; display: inline-block; }
+    .logo-wrap img { width: 100px; height: 100px; border-radius: 20px; }
+    .logo-text { position: relative; z-index: 1; margin-top: 12px; font-size: 22px; font-weight: 700; color: #f0f0f0; letter-spacing: -0.3px; }
+    .logo-text span { color: #3B82F6; }
+
+    .card { background: #1a1a1a; border: 1px solid #222; border-radius: 16px; padding: 32px; position: relative; z-index: 1; }
     h2 { font-size: 22px; margin-bottom: 8px; text-align: center; }
-    .subtitle { color: #888; text-align: center; margin-bottom: 24px; font-size: 14px; }
+    .subtitle { color: #999; text-align: center; margin-bottom: 24px; font-size: 14px; }
     .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 14px; color: #888; margin-bottom: 6px; }
-    .field input { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; color: #f0f0f0; font-size: 16px; outline: none; transition: border-color 0.2s; }
-    .field input:focus { border-color: #3b82f6; }
-    .btn { display: block; width: 100%; background: #3b82f6; color: #fff; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 16px; border: none; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
+    .field label { display: block; font-size: 14px; color: #999; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 14px 16px; background: #111; border: 1px solid #333; border-radius: 10px; color: #f0f0f0; font-size: 16px; outline: none; transition: border-color 0.2s; }
+    .field input:focus { border-color: #3B82F6; }
+    .btn { display: block; width: 100%; background: #3B82F6; color: #fff; padding: 16px 28px; border-radius: 12px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
     .btn:hover { background: #2563eb; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .error-msg { color: #ef4444; font-size: 14px; text-align: center; margin-top: 12px; display: none; }
     .links { text-align: center; margin-top: 20px; }
-    .links a { color: #3b82f6; text-decoration: none; font-size: 14px; }
-    .benefits { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-    .benefit { flex: 1; min-width: 120px; text-align: center; padding: 12px; background: #1a1a1a; border-radius: 8px; }
-    .benefit .icon { font-size: 24px; margin-bottom: 4px; }
-    .benefit .text { font-size: 12px; color: #888; }
+    .links a { color: #3B82F6; text-decoration: none; font-size: 14px; }
+    .links a:hover { text-decoration: underline; }
+    .benefits { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .benefit { flex: 1; min-width: 110px; text-align: center; padding: 14px 8px; background: #111; border-radius: 10px; border: 1px solid #222; }
+    .benefit .icon { font-size: 24px; margin-bottom: 6px; }
+    .benefit .text { font-size: 12px; color: #999; }
+
+    @media (max-width: 480px) {
+      .logo-glow { width: 400px; height: 400px; }
+      .container { padding: 32px 16px; }
+      .card { padding: 24px; }
+      .benefits { gap: 8px; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo"><a href="/">Fixy<span>Pro</span></a></div>
+    <div class="logo-wrap">
+      <div class="logo-glow"></div>
+      <a href="/"><img src="/fixy-logo.png" alt="Fixy"></a>
+      <div class="logo-text">Fixy <span>Pro</span></div>
+    </div>
     <div class="card">
       <h2>Create Your Pro Account</h2>
       <p class="subtitle">Free forever. Get connected with homeowners who need your services.</p>
@@ -88,7 +105,13 @@
         }
 
         localStorage.setItem('fixy_pro_token', data.token);
+
+        // Store claimed lead ID if registering from a claim link
         const leadId = new URLSearchParams(window.location.search).get('leadId');
+        if (leadId) {
+          localStorage.setItem('claimedLeadId', leadId);
+        }
+
         window.location.href = leadId ? `/pro/claim?leadId=${leadId}` : '/pro/dashboard';
       } catch {
         errorEl.textContent = 'Network error. Please try again.';

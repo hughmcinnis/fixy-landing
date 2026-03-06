@@ -5,33 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Claim Lead — Fixy Pro</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; min-height: 100vh; }
-    .container { max-width: 560px; margin: 0 auto; padding: 40px 20px; }
-    .logo { text-align: center; margin-bottom: 32px; }
-    .logo a { color: #f0f0f0; text-decoration: none; font-size: 28px; font-weight: 700; }
-    .logo span { color: #3b82f6; }
-    .card { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 560px; margin: 0 auto; padding: 48px 20px; }
+
+    .logo-wrap { text-align: center; margin-bottom: 40px; position: relative; display: flex; flex-direction: column; align-items: center; }
+    .logo-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, rgba(29,78,216,0.3) 25%, rgba(30,58,138,0.15) 45%, rgba(30,58,138,0.04) 65%, transparent 80%); border-radius: 50%; pointer-events: none; z-index: 0; }
+    .logo-wrap a { position: relative; z-index: 1; display: inline-block; }
+    .logo-wrap img { width: 100px; height: 100px; border-radius: 20px; }
+    .logo-text { position: relative; z-index: 1; margin-top: 12px; font-size: 22px; font-weight: 700; color: #f0f0f0; letter-spacing: -0.3px; }
+    .logo-text span { color: #3B82F6; }
+
+    .card { background: #1a1a1a; border: 1px solid #222; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
     .card h2 { font-size: 22px; margin-bottom: 8px; }
-    .card .meta { color: #888; font-size: 14px; margin-bottom: 16px; }
-    .diagnosis-box { background: #1a1a1a; border-left: 3px solid #3b82f6; padding: 16px; border-radius: 4px; margin: 16px 0; color: #ccc; line-height: 1.6; }
+    .card .meta { color: #999; font-size: 14px; margin-bottom: 16px; }
+    .diagnosis-box { background: #111; border-left: 3px solid #3B82F6; padding: 16px; border-radius: 6px; margin: 16px 0; color: #ccc; line-height: 1.6; }
     .cta { text-align: center; margin-top: 24px; }
-    .btn { display: inline-block; background: #3b82f6; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn { display: inline-block; background: #3B82F6; color: #fff; padding: 16px 28px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: background 0.2s; }
     .btn:hover { background: #2563eb; }
-    .btn-outline { background: transparent; border: 1px solid #3b82f6; color: #3b82f6; }
-    .btn-outline:hover { background: #3b82f6; color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid #3B82F6; color: #3B82F6; }
+    .btn-outline:hover { background: #3B82F6; color: #fff; }
     .contact-info { margin-top: 20px; }
-    .contact-info p { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
+    .contact-info p { padding: 10px 0; border-bottom: 1px solid #222; color: #ccc; font-size: 15px; }
     .contact-info strong { color: #f0f0f0; }
-    .loading { text-align: center; padding: 60px; color: #888; }
+    .loading { text-align: center; padding: 60px; color: #999; }
     .error { color: #ef4444; text-align: center; padding: 40px; }
     .links { text-align: center; margin-top: 16px; }
-    .links a { color: #3b82f6; text-decoration: none; font-size: 14px; }
+    .links a { color: #3B82F6; text-decoration: none; font-size: 14px; }
+    .links a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .logo-glow { width: 400px; height: 400px; }
+      .container { padding: 32px 16px; }
+      .card { padding: 24px; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo"><a href="/">Fixy<span>Pro</span></a></div>
+    <div class="logo-wrap">
+      <div class="logo-glow"></div>
+      <a href="/"><img src="/fixy-logo.png" alt="Fixy"></a>
+      <div class="logo-text">Fixy <span>Pro</span></div>
+    </div>
     <div id="content"><div class="loading">Loading lead details...</div></div>
   </div>
   <script>
@@ -58,14 +74,13 @@
         }
 
         if (data.authenticated === false) {
-          // Teaser view
           document.getElementById('content').innerHTML = `
             <div class="card">
               <h2>New ${data.serviceType} Lead</h2>
               <div class="meta">${data.generalArea || 'Unknown area'} · ${new Date(data.createdAt).toLocaleDateString()}</div>
               <div class="diagnosis-box">${data.diagnosis}</div>
               <div class="cta">
-                <p style="color:#888;margin-bottom:16px;">Sign up for a free Fixy Pro account to see the homeowner's full contact details.</p>
+                <p style="color:#999;margin-bottom:16px;">Sign up for a free Fixy Pro account to see the homeowner's full contact details.</p>
                 <a href="/pro/register?leadId=${leadId}" class="btn">Sign Up to View Details</a>
               </div>
               <div class="links">
@@ -73,7 +88,6 @@
               </div>
             </div>`;
         } else {
-          // Full view
           const c = data.userContact || {};
           const loc = data.userLocation || {};
           document.getElementById('content').innerHTML = `
@@ -82,10 +96,10 @@
               <div class="meta">${loc.city ? loc.city + ', ' + loc.state : ''} · ${new Date(data.createdAt).toLocaleDateString()} · ${data.status}</div>
               <div class="diagnosis-box">${data.diagnosis}</div>
               <div class="contact-info">
-                <h3 style="margin-bottom:12px;font-size:16px;">Homeowner Contact</h3>
+                <h3 style="margin-bottom:12px;font-size:16px;color:#f0f0f0;">Homeowner Contact</h3>
                 ${c.name ? `<p><strong>Name:</strong> ${c.name}</p>` : ''}
-                ${c.email ? `<p><strong>Email:</strong> <a href="mailto:${c.email}" style="color:#3b82f6">${c.email}</a></p>` : ''}
-                ${c.phone ? `<p><strong>Phone:</strong> <a href="tel:${c.phone}" style="color:#3b82f6">${c.phone}</a></p>` : ''}
+                ${c.email ? `<p><strong>Email:</strong> <a href="mailto:${c.email}" style="color:#3B82F6">${c.email}</a></p>` : ''}
+                ${c.phone ? `<p><strong>Phone:</strong> <a href="tel:${c.phone}" style="color:#3B82F6">${c.phone}</a></p>` : ''}
                 ${c.zipCode ? `<p><strong>Zip Code:</strong> ${c.zipCode}</p>` : ''}
               </div>
               <div class="cta">
